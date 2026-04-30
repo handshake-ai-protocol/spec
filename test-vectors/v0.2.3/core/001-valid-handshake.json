@@ -29,7 +29,7 @@
       "aud": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
       "iat": "2026-04-29T14:02:11Z",
       "nbf": "2026-04-29T14:02:11Z",
-      "exp": "2026-04-29T14:12:11Z",
+      "exp": "2026-04-29T14:32:11Z",
       "capabilities": [
         {
           "name": "billing.invoices.read",
