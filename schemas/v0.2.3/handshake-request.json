@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/handshake-request.json",
+  "title": "HandshakeRequest",
+  "description": "The message an agent sends to a service before performing an action. Includes the agent's identity, the requested capability, the delegation chain proving authority, and a nonce for replay protection. See spec §8.2, §9.",
+  "type": "object",
+  "required": [
+    "version", "kind", "id",
+    "iss", "aud", "iat", "nonce",
+    "agent_attestation", "capability", "delegation_chain",
+    "alg", "signature"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.2.3"
+    },
+    "kind": {
+      "type": "string",
+      "const": "HandshakeRequest"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^hs_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID prefixed with hs_"
+    },
+    "iss": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "Initiating agent's DID"
+    },
+    "aud": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "Receiving service's DID — MUST be verified by the receiver. See spec §6.7."
+    },
+    "iat": { "$ref": "_common.json#/$defs/timestamp" },
+    "nonce": {
+      "$ref": "_common.json#/$defs/nonce",
+      "description": "Cryptographically random value, ≥128 bits. Receiver MUST track and reject duplicates within TTL window."
+    },
+    "agent_attestation": {
+      "type": "object",
+      "required": ["deployer", "model", "instance_id"],
+      "properties": {
+        "deployer": {
+          "$ref": "_common.json#/$defs/did",
+          "description": "Organization responsible for this agent's deployment"
+        },
+        "model": {
+          "type": "string",
+          "description": "Identifier of the underlying model. Example: claude-sonnet-4-5"
+        },
+        "model_version": {
+          "type": "string",
+          "description": "OPTIONAL. Specific model version or revision."
+        },
+        "instance_id": {
+          "type": "string",
+          "description": "Implementation-defined unique identifier for this agent instance / session"
+        },
+        "code_hash": {
+          "$ref": "_common.json#/$defs/hashValue",
+          "description": "OPTIONAL. Hash of the agent code or build artifact, for supply-chain attestation."
+        }
+      },
+      "additionalProperties": true,
+      "description": "Verifiable claims about the agent making the request"
+    },
+    "capability": {
+      "$ref": "_common.json#/$defs/capability",
+      "description": "The capability being requested for this action"
+    },
+    "delegation_chain": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "delegation-token.json"
+      },
+      "description": "Ordered root → leaf chain of DelegationTokens proving authority"
+    },
+    "alg": { "$ref": "_common.json#/$defs/signatureAlgorithm" },
+    "signature": {
+      "$ref": "_common.json#/$defs/base64url",
+      "description": "Signature over the JCS-canonicalized form of this object with the signature field omitted. Signed by the agent's key. See spec §6.3."
+    }
+  },
+  "additionalProperties": false
+}

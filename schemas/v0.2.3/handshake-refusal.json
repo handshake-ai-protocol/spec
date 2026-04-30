@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/handshake-refusal.json",
+  "title": "HandshakeResponse — Refusal",
+  "description": "A signed assertion by a service that it has refused to execute a HandshakeRequest, with a typed reason. Refusals are auditable and form part of the receipt graph. See spec §8.4, §14.",
+  "type": "object",
+  "required": [
+    "version", "kind", "request_id",
+    "iss", "aud", "iat", "reason",
+    "alg", "signature"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.2.3"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Refusal"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^hs_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "iss": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "The refusing service's DID"
+    },
+    "aud": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "The originating agent's DID"
+    },
+    "iat": { "$ref": "_common.json#/$defs/timestamp" },
+    "reason": {
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": {
+          "$ref": "_common.json#/$defs/errorCode",
+          "description": "Standard error code. See spec §14."
+        },
+        "detail": {
+          "type": "string",
+          "description": "OPTIONAL human-readable explanation. SHOULD NOT include personal data."
+        },
+        "retry_after_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "OPTIONAL. For service_unavailable / rate_limited refusals."
+        }
+      },
+      "additionalProperties": false
+    },
+    "alg": { "$ref": "_common.json#/$defs/signatureAlgorithm" },
+    "signature": {
+      "$ref": "_common.json#/$defs/base64url",
+      "description": "Signature over the JCS-canonicalized form. Signed by the service's key."
+    }
+  },
+  "additionalProperties": false
+}

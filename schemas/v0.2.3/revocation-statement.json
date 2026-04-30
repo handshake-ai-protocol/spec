@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/revocation-statement.json",
+  "title": "RevocationStatement",
+  "description": "A signed assertion by a principal that a previously-issued delegation, key, or sub-principal is no longer valid. Published at the issuer's handshake:revocation endpoint. See spec §11 (Revocation).",
+  "type": "object",
+  "required": [
+    "version", "kind", "id",
+    "iss", "iat", "revoked", "reason",
+    "alg", "signature"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.2.3"
+    },
+    "kind": {
+      "type": "string",
+      "const": "RevocationStatement"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^rv_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID prefixed with rv_"
+    },
+    "iss": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "The principal issuing the revocation. MUST have authority to revoke the target."
+    },
+    "iat": { "$ref": "_common.json#/$defs/timestamp" },
+    "revoked": {
+      "type": "object",
+      "oneOf": [
+        {
+          "required": ["delegation_id"],
+          "properties": {
+            "delegation_id": {
+              "type": "string",
+              "pattern": "^dt_[0-9A-HJKMNP-TV-Z]{26}$",
+              "description": "Specific DelegationToken being revoked"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": ["principal"],
+          "properties": {
+            "principal": {
+              "$ref": "_common.json#/$defs/did",
+              "description": "Entire principal being revoked (key compromise scenario)"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "Either a specific delegation ID OR a principal DID (for key compromise). Exactly one MUST be present."
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "key_compromise",
+        "policy_change",
+        "principal_terminated",
+        "rotation",
+        "unspecified"
+      ],
+      "description": "Reason for revocation"
+    },
+    "effective_at": {
+      "$ref": "_common.json#/$defs/timestamp",
+      "description": "OPTIONAL. If absent, revocation is effective immediately at iat. Useful for scheduled revocations."
+    },
+    "alg": { "$ref": "_common.json#/$defs/signatureAlgorithm" },
+    "signature": {
+      "$ref": "_common.json#/$defs/base64url"
+    }
+  },
+  "additionalProperties": false
+}

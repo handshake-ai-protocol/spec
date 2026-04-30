@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/handshake-acceptance.json",
+  "title": "HandshakeResponse — Acceptance",
+  "description": "A signed assertion by a service that it has verified a HandshakeRequest and will execute the requested action under the stated effective scope. See spec §8.3.",
+  "type": "object",
+  "required": [
+    "version", "kind", "request_id",
+    "iss", "aud", "iat", "effective_scope",
+    "alg", "signature"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.2.3"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Acceptance"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^hs_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "References the HandshakeRequest this acceptance is bound to"
+    },
+    "iss": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "The accepting service's DID"
+    },
+    "aud": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "The originating agent's DID — MUST equal iss of the HandshakeRequest"
+    },
+    "iat": { "$ref": "_common.json#/$defs/timestamp" },
+    "effective_scope": {
+      "type": "object",
+      "required": ["capability", "constraints"],
+      "properties": {
+        "capability": {
+          "type": "string",
+          "description": "Name of the capability granted (after intersection)"
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Constraints granted (intersection of all delegation constraints + service policy)"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The effective scope under which the action will execute. May be NARROWER than what was requested if intersection narrowed it."
+    },
+    "session_token": {
+      "type": "string",
+      "description": "OPTIONAL. An opaque token the agent MAY present in subsequent warm handshakes within the TTL. See spec §9.2."
+    },
+    "session_ttl_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "OPTIONAL. Session token validity window in seconds."
+    },
+    "alg": { "$ref": "_common.json#/$defs/signatureAlgorithm" },
+    "signature": {
+      "$ref": "_common.json#/$defs/base64url",
+      "description": "Signature over the JCS-canonicalized form. Signed by the service's key."
+    }
+  },
+  "additionalProperties": false
+}

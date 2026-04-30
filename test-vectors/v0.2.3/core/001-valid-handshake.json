@@ -1,0 +1,76 @@
+{
+  "vector_id": "001-valid-handshake",
+  "spec_version": "0.2.3",
+  "category": "core",
+  "description": "A well-formed HandshakeRequest with a single-link delegation chain, signed correctly, with the requested capability falling within the delegated scope. Verifier MUST accept and produce a valid Acceptance.",
+  "spec_references": ["§5.1", "§6.1", "§6.3", "§6.7", "§8.1", "§8.2", "§9.1", "§11"],
+  "context": {
+    "now": "2026-04-29T14:14:32Z",
+    "public_keys": {
+      "did:hsk:user:alice@example.com": "MCowBQYDK2VwAyEAGb9ECWmEzf6FQbrBZ9w7lshQhqowtrbLDFw4rXAxZuE",
+      "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1": "MCowBQYDK2VwAyEAEpiVxKEjy_g0qeg6vXzZ8FNhTzVz6bxBKRZP-Q5xDLs",
+      "did:hsk:svc:z6MkmW9pQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWxYzAbCdEf": "MCowBQYDK2VwAyEAVKnQg9z9d3xqBGsJpFvjQs3z6n8KaTpRZxsCQwGr4xY"
+    },
+    "private_keys": {
+      "did:hsk:svc:z6MkmW9pQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWxYzAbCdEf": "MC4CAQAwBQYDK2VwBCIEIDVZpvQqRsTuVwXyZAbcDeFgHiJkLmNoPqRsTuVwXyZA"
+    },
+    "registry_state": {
+      "revoked_delegations": [],
+      "revoked_principals": []
+    }
+  },
+  "input": {
+    "delegation": {
+      "version": "0.2.3",
+      "kind": "DelegationToken",
+      "id": "dt_01HK4ZQ7M3X9R5N2P8V0YJF7B3",
+      "iss": "did:hsk:user:alice@example.com",
+      "sub": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
+      "aud": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
+      "iat": "2026-04-29T14:02:11Z",
+      "nbf": "2026-04-29T14:02:11Z",
+      "exp": "2026-04-29T14:12:11Z",
+      "capabilities": [
+        {
+          "name": "billing.invoices.read",
+          "constraints": { "max_invoices": 100 },
+          "delegable": false
+        }
+      ],
+      "sub_delegation_depth_remaining": 0,
+      "alg": "EdDSA",
+      "signature": "TEST_VECTOR_SIGNATURE_001_DELEGATION"
+    },
+    "request": {
+      "version": "0.2.3",
+      "kind": "HandshakeRequest",
+      "id": "hs_01HK4ZQ8N4Y0S6P3Q9W1ZK8C4",
+      "iss": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
+      "aud": "did:hsk:svc:z6MkmW9pQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWxYzAbCdEf",
+      "iat": "2026-04-29T14:14:32Z",
+      "nonce": "k7nQ9pX3vR2mT4uV6wY8zA",
+      "agent_attestation": {
+        "deployer": "did:hsk:org:z6MkqA1bC2dE3fG4hI5jK6lM7nO8pQ9rS0tU1vW2xY3zA4bC",
+        "model": "claude-sonnet-4-5",
+        "instance_id": "job-7f3a"
+      },
+      "capability": {
+        "name": "billing.invoices.read",
+        "constraints": { "max_invoices": 100 }
+      },
+      "delegation_chain": [
+        { "$ref_vector_local": "delegation" }
+      ],
+      "alg": "EdDSA",
+      "signature": "TEST_VECTOR_SIGNATURE_001_REQUEST"
+    }
+  },
+  "expected": {
+    "result": "accept",
+    "effective_scope": {
+      "capability": "billing.invoices.read",
+      "constraints": { "max_invoices": 100 }
+    }
+  },
+  "notes": "TEST_VECTOR_SIGNATURE_* placeholders are replaced by the SDK vector runner with real signatures generated using the private keys in context.private_keys. The actual JCS-canonicalized payload bytes are documented in the runner output for cross-implementation debugging. Implementations that produce different canonical bytes for the same logical payload are non-conformant — see vector 010 for an explicit JCS exercise."
+}

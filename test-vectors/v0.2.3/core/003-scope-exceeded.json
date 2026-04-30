@@ -1,0 +1,71 @@
+{
+  "vector_id": "003-scope-exceeded",
+  "spec_version": "0.2.3",
+  "category": "core",
+  "description": "A HandshakeRequest where the requested constraint (`max_invoices: 500`) exceeds the delegation's grant (`max_invoices: 100`). All signatures and other fields valid. Verifier MUST reject with `scope_exceeded`.",
+  "spec_references": ["§10", "§11", "§14"],
+  "context": {
+    "now": "2026-04-29T14:14:32Z",
+    "public_keys": {
+      "did:hsk:user:alice@example.com": "MCowBQYDK2VwAyEAGb9ECWmEzf6FQbrBZ9w7lshQhqowtrbLDFw4rXAxZuE",
+      "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1": "MCowBQYDK2VwAyEAEpiVxKEjy_g0qeg6vXzZ8FNhTzVz6bxBKRZP-Q5xDLs",
+      "did:hsk:svc:z6MkmW9pQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWxYzAbCdEf": "MCowBQYDK2VwAyEAVKnQg9z9d3xqBGsJpFvjQs3z6n8KaTpRZxsCQwGr4xY"
+    },
+    "registry_state": {
+      "revoked_delegations": [],
+      "revoked_principals": []
+    }
+  },
+  "input": {
+    "delegation": {
+      "version": "0.2.3",
+      "kind": "DelegationToken",
+      "id": "dt_01HK4ZQ7M3X9R5N2P8V0YJF7B3",
+      "iss": "did:hsk:user:alice@example.com",
+      "sub": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
+      "aud": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
+      "iat": "2026-04-29T14:02:11Z",
+      "nbf": "2026-04-29T14:02:11Z",
+      "exp": "2026-04-29T14:32:11Z",
+      "capabilities": [
+        {
+          "name": "billing.invoices.read",
+          "constraints": { "max_invoices": 100 }
+        }
+      ],
+      "sub_delegation_depth_remaining": 0,
+      "alg": "EdDSA",
+      "signature": "TEST_VECTOR_SIGNATURE_003_DELEGATION"
+    },
+    "request": {
+      "version": "0.2.3",
+      "kind": "HandshakeRequest",
+      "id": "hs_01HK4ZQ8N4Y0S6P3Q9W1ZK8C6",
+      "iss": "did:hsk:agent:z6MkfTr3vHt8KjLm2nP5qR9wY3xZ4aB6cD7eF8gH9iJ0kL1",
+      "aud": "did:hsk:svc:z6MkmW9pQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWxYzAbCdEf",
+      "iat": "2026-04-29T14:14:32Z",
+      "nonce": "n9pS1rZ5xT4oV6wX8yA0bC",
+      "agent_attestation": {
+        "deployer": "did:hsk:org:z6MkqA1bC2dE3fG4hI5jK6lM7nO8pQ9rS0tU1vW2xY3zA4bC",
+        "model": "claude-sonnet-4-5",
+        "instance_id": "job-7f3a"
+      },
+      "capability": {
+        "name": "billing.invoices.read",
+        "constraints": { "max_invoices": 500 }
+      },
+      "delegation_chain": [
+        { "$ref_vector_local": "delegation" }
+      ],
+      "alg": "EdDSA",
+      "signature": "TEST_VECTOR_SIGNATURE_003_REQUEST"
+    }
+  },
+  "expected": {
+    "result": "reject",
+    "error_code": "scope_exceeded",
+    "rejected_at_step": "scope_intersection",
+    "detail_must_include": ["max_invoices"]
+  },
+  "notes": "Per spec §10 (Constraint algebra), `numeric_max` constraints intersect to the LOWER bound. The chain-intersected effective scope is `max_invoices: 100`. The request's `max_invoices: 500` exceeds this; the verifier MUST reject. The Refusal MUST identify the violating constraint in `detail` to aid implementer debugging. Implementations that silently downscope rather than reject are NON-CONFORMANT — receivers MUST reject with `scope_exceeded` rather than narrow on behalf of the caller."
+}

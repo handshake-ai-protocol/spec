@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/_common.json",
+  "title": "Handshake Protocol — Common Definitions v0.2.3",
+  "description": "Shared sub-schemas referenced by every Handshake message type. See spec §5–§10.",
+  "$defs": {
+    "did": {
+      "type": "string",
+      "pattern": "^did:hsk:(user|agent|svc|org):[A-Za-z0-9._@:%-]+$",
+      "description": "Decentralized Identifier under the did:hsk method. Format: did:hsk:<type>:<identifier>. See spec §5."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 timestamp with mandatory timezone offset. Example: 2026-04-29T14:02:11Z"
+    },
+    "ulid": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID — Universally Unique Lexicographically Sortable Identifier (Crockford base32, 26 chars)"
+    },
+    "base64url": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "description": "base64url encoding without padding, per RFC 4648 §5"
+    },
+    "hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]+$",
+      "description": "Lowercase hexadecimal encoding"
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{22,}$",
+      "description": "base64url-encoded random value, MINIMUM 128 bits (22 base64url chars)"
+    },
+    "signatureAlgorithm": {
+      "type": "string",
+      "enum": ["EdDSA", "ML-DSA-65", "Hybrid-EdDSA-MLDSA65"],
+      "description": "Signing algorithm. EdDSA REQUIRED in v0.2.x; ML-DSA-65 RECOMMENDED for negotiation in v0.3+. See spec §6.1."
+    },
+    "hashAlgorithm": {
+      "type": "string",
+      "enum": ["sha-256", "sha3-256"],
+      "description": "Hash algorithm identifier. SHA-256 is REQUIRED. See spec §6.2."
+    },
+    "hashValue": {
+      "type": "object",
+      "required": ["alg", "value"],
+      "properties": {
+        "alg": { "$ref": "#/$defs/hashAlgorithm" },
+        "value": { "$ref": "#/$defs/hex" }
+      },
+      "additionalProperties": false,
+      "description": "An algorithm-tagged hash value"
+    },
+    "capability": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]*(:.+)?$",
+          "description": "Dotted lowercase namespace, optional :resource-suffix. Example: billing.invoices.read or files.write:/projects/*. See spec §10."
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Typed constraints. Standard types: numeric_max, numeric_min, string_pattern, enum, time_window, rate_limit, resource_path. See spec §10."
+        },
+        "delegable": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, the capability MAY be sub-delegated. See spec §11."
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorCode": {
+      "type": "string",
+      "enum": [
+        "signature_invalid",
+        "chain_broken",
+        "scope_exceeded",
+        "credential_revoked",
+        "expired",
+        "not_yet_valid",
+        "replay_detected",
+        "aud_mismatch",
+        "policy_denied",
+        "service_unavailable",
+        "rate_limited",
+        "protocol_version_unsupported"
+      ],
+      "description": "Standard error codes. Custom codes MUST be prefixed x-. See spec §14."
+    }
+  }
+}

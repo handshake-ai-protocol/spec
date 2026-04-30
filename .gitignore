@@ -1,0 +1,26 @@
+## Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+## Build artifacts
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+build/
+
+## Local-only experiments
+scratch/
+.scratch/
+*.local.json
+*.local.md
+
+## Secrets — DO NOT COMMIT
+*.key
+*.pem
+.env
+.env.*
+credentials/

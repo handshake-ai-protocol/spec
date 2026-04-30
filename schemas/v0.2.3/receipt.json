@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/receipt.json",
+  "title": "Receipt",
+  "description": "A signed assertion by a service that an action was executed under an authorizing HandshakeRequest, with a tamper-evident commitment to the result. The protocol's evidence layer. See spec §8.5, §12.",
+  "type": "object",
+  "required": [
+    "version", "kind", "id", "handshake_id",
+    "iss", "sub", "action", "executed_at",
+    "result", "result_hash",
+    "alg", "signature"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.2.3"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Receipt"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^rc_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID prefixed with rc_"
+    },
+    "handshake_id": {
+      "type": "string",
+      "pattern": "^hs_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "References the HandshakeRequest that authorized this action"
+    },
+    "iss": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "Executing service's DID"
+    },
+    "sub": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "Initiating agent's DID"
+    },
+    "action": {
+      "type": "string",
+      "description": "Capability invoked. Format per spec §10."
+    },
+    "executed_at": { "$ref": "_common.json#/$defs/timestamp" },
+    "result": {
+      "type": "string",
+      "enum": ["ok", "error", "partial"],
+      "description": "High-level outcome status"
+    },
+    "result_hash": {
+      "$ref": "_common.json#/$defs/hashValue",
+      "description": "Hash of the JCS-canonicalized response payload. SHA-256 REQUIRED."
+    },
+    "result_summary": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "OPTIONAL non-sensitive structured summary (counts, codes). MUST NOT include personal data. See spec §18."
+    },
+    "upstream_receipts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^rc_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "description": "Optional references to upstream receipts that fed into this action. Forms the receipt DAG. See spec §12."
+    },
+    "registry_anchor": {
+      "type": "object",
+      "properties": {
+        "registry_did": { "$ref": "_common.json#/$defs/did" },
+        "tree_size": { "type": "integer", "minimum": 1 },
+        "tree_root": { "$ref": "_common.json#/$defs/hex" },
+        "tree_root_signature": { "$ref": "_common.json#/$defs/base64url" }
+      },
+      "additionalProperties": false,
+      "description": "OPTIONAL. Present if and when the receipt has been anchored to a Registry."
+    },
+    "alg": { "$ref": "_common.json#/$defs/signatureAlgorithm" },
+    "signature": {
+      "$ref": "_common.json#/$defs/base64url",
+      "description": "Signature over the JCS-canonicalized form. Signed by the executing service's key."
+    }
+  },
+  "additionalProperties": false
+}

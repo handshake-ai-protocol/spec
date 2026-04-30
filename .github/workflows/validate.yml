@@ -1,0 +1,77 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  schemas:
+    name: Validate JSON Schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli ajv-formats
+      - name: Lint schemas (parse + draft 2020-12 conformance)
+        run: |
+          for f in schemas/*/*.json; do
+            echo "::group::$f"
+            ajv compile -s "$f" --spec=draft2020 || exit 1
+            echo "::endgroup::"
+          done
+
+  vectors:
+    name: Validate test vectors against schemas
+    runs-on: ubuntu-latest
+    needs: schemas
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install jsonschema
+        run: pip install jsonschema referencing
+      - name: Validate test vectors
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+          import sys
+          # Smoke validation: every test vector must be parseable JSON and
+          # have the required top-level fields. Full schema-against-schema
+          # validation runs in the SDK conformance runners.
+          required = {"vector_id", "spec_version", "category", "description",
+                      "spec_references", "input", "context", "expected"}
+          fails = 0
+          for p in pathlib.Path("test-vectors").rglob("*.json"):
+              try:
+                  d = json.loads(p.read_text())
+              except json.JSONDecodeError as e:
+                  print(f"  PARSE FAIL: {p}: {e}", file=sys.stderr)
+                  fails += 1
+                  continue
+              missing = required - d.keys()
+              if missing:
+                  print(f"  MISSING FIELDS in {p}: {missing}", file=sys.stderr)
+                  fails += 1
+                  continue
+              print(f"  ok  {p}")
+          if fails:
+              sys.exit(f"{fails} vector(s) failed validation")
+          PY
+
+  markdown-links:
+    name: Markdown link check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          config-file: '.github/markdown-link-check.json'

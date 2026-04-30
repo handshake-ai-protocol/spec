@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handshake.ai/schemas/v0.2.3/did-document.json",
+  "title": "Handshake DID Document",
+  "description": "DID Document for the did:hsk method. Conforms to W3C DID Core 1.0 with Handshake-specific extension fields. See spec §5.2.",
+  "type": "object",
+  "required": ["@context", "id", "verificationMethod", "authentication"],
+  "properties": {
+    "@context": {
+      "oneOf": [
+        { "type": "string", "const": "https://www.w3.org/ns/did/v1" },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "format": "uri" },
+          "contains": { "const": "https://www.w3.org/ns/did/v1" }
+        }
+      ]
+    },
+    "id": {
+      "$ref": "_common.json#/$defs/did",
+      "description": "The DID this document describes"
+    },
+    "versionId": {
+      "type": "string",
+      "description": "Monotonic version identifier for key rotation. See spec §5.3."
+    },
+    "versionTime": {
+      "$ref": "_common.json#/$defs/timestamp",
+      "description": "When this version became effective"
+    },
+    "previousVersionSignature": {
+      "$ref": "_common.json#/$defs/base64url",
+      "description": "REQUIRED for versionId > 1. Signature by the previous version's authentication key."
+    },
+    "verificationMethod": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "controller", "publicKeyJwk"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Verification method identifier (DID URL)"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Ed25519VerificationKey2020", "MLDSA65VerificationKey2026"]
+          },
+          "controller": { "$ref": "_common.json#/$defs/did" },
+          "publicKeyJwk": {
+            "type": "object",
+            "description": "Public key in JWK format per RFC 8037 (CFRG curves) or FIPS 204 (ML-DSA)"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "authentication": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "DID URL referencing a verificationMethod authorized for signing"
+      }
+    },
+    "service": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "serviceEndpoint"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "serviceEndpoint": {
+            "oneOf": [
+              { "type": "string", "format": "uri" },
+              { "type": "object" }
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "description": "OPTIONAL service endpoints"
+    },
+    "handshake:credentials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "W3C Verifiable Credential issued by the deployer attesting to model, code hash, environment, etc."
+      },
+      "description": "Handshake extension: deployer-issued attestations about this principal. See spec §5.2."
+    },
+    "handshake:revocation": {
+      "type": "object",
+      "required": ["endpoint"],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "description": "HTTPS endpoint serving signed RevocationStatements for delegations issued by this principal"
+        },
+        "polling_interval_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 30,
+          "description": "RECOMMENDED polling interval for verifiers"
+        },
+        "push_subscription_endpoint": {
+          "type": "string",
+          "format": "uri",
+          "description": "OPTIONAL. Webhook endpoint that the principal will POST RevocationStatements to immediately on revocation."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Handshake extension: where to look up revocations issued by this principal."
+    }
+  },
+  "additionalProperties": true
+}
