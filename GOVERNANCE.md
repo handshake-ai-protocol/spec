@@ -1,6 +1,6 @@
 # Governance
 
-The Handshake Protocol is intended to be a vendor-neutral open standard. This document describes how the protocol is governed today, who can contribute, how decisions get made, and the path to formal Foundation governance.
+The Handshake Protocol is intended to be a vendor-neutral open standard. The Handshake Protocol is one of several emerging cryptographic identity / audit approaches for AI agents. The spec is open and welcomes contributions from implementers across the ecosystem. This document describes how the protocol is governed today, who can contribute, how decisions get made, and the path to formal Foundation governance.
 
 ## Today (Early Access — 2026)
 
