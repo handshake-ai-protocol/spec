@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+### Added (2026-05-05, ships with the next spec rev — no wire change)
+
+- **§5.1 resolution convention paragraph.** Codifies that `did:hsk:org:<host>` resolves at `https://<host>/.well-known/handshake/did.json` and that the DID Document `id` field MUST string-equal the requested DID (no `alsoKnownAs` chain following). The convention was already implemented by every SDK; this paragraph just makes the contract grep-able.
+- **`_common.json#/$defs/did` description update.** Mirrors the §5.1 paragraph so the schema is self-documenting.
+
 ### Planned for v0.3 (Q3 2026)
 
 - Hybrid signing (`Hybrid-EdDSA-MLDSA65`) — backwards compatible

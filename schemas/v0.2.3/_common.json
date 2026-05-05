@@ -7,7 +7,7 @@
     "did": {
       "type": "string",
       "pattern": "^did:hsk:(user|agent|svc|org):[A-Za-z0-9._@:%-]+$",
-      "description": "Decentralized Identifier under the did:hsk method. Format: did:hsk:<type>:<identifier>. See spec §5."
+      "description": "Decentralized Identifier under the did:hsk method. Format: did:hsk:<type>:<identifier>. See spec §5. Resolution convention: did:hsk:org:<host> resolves at https://<host>/.well-known/handshake/did.json (e.g. did:hsk:org:handshake.ai → https://handshake.ai/.well-known/handshake/did.json). Other types (user/agent/svc) resolve via the operator's Registry per spec §5.2."
     },
     "timestamp": {
       "type": "string",
