@@ -1,0 +1,15 @@
+{
+  "ignorePatterns": [
+    { "pattern": "^https://handshake\\.ai" },
+    { "pattern": "^https://docs\\.handshake\\.ai" },
+    { "pattern": "^https://billing\\.acme\\.com" },
+    { "pattern": "^https://github\\.com/handshake-ai-protocol/spec/issues/\\d+" },
+    { "pattern": "^https://github\\.com/handshake-ai-protocol/spec/security" },
+    { "pattern": "^https://github\\.com/handshake-ai-protocol/spec/releases" },
+    { "pattern": "^https://github\\.com/handshake-ai-protocol/spec/compare" }
+  ],
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206]
+}

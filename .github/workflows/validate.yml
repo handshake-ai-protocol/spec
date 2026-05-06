@@ -21,7 +21,13 @@ jobs:
         run: |
           for f in schemas/*/*.json; do
             echo "::group::$f"
-            ajv compile -s "$f" --spec=draft2020 || exit 1
+            dir=$(dirname "$f")
+            refs=""
+            for r in "$dir"/*.json; do
+              [ "$r" = "$f" ] && continue
+              refs="$refs -r $r"
+            done
+            ajv compile -s "$f" $refs -c ajv-formats --spec=draft2020 || exit 1
             echo "::endgroup::"
           done
 
