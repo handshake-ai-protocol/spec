@@ -1,4 +1,4 @@
-# handshake-protocol / spec
+# handshake-ai-protocol / spec
 
 > **The Handshake Protocol** — an open protocol for cryptographic agent identity, verifiable delegation, and signed action receipts. The audit envelope for the AI agent era.
 
@@ -26,7 +26,7 @@ pip install handshake-sdk
 npm install @handshake/sdk
 
 # Go
-go get github.com/handshake-protocol/handshake-go
+go get github.com/handshake-ai-protocol/handshake-go
 ```
 
 ```python
@@ -129,7 +129,7 @@ Companies interested in joining the Working Group: [working-group@handshake.ai](
 We welcome proposals — typo fixes, clarifying language, new test vectors, errata, and substantive spec changes. Substantive changes follow a structured RFC-style process. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
 
 Quick links:
-- [Open an issue](https://github.com/handshake-protocol/spec/issues/new/choose)
+- [Open an issue](https://github.com/handshake-ai-protocol/spec/issues/new/choose)
 - [Propose a spec change (RFC)](.github/ISSUE_TEMPLATE/spec-proposal.md)
 - [Submit a conformance test vector](test-vectors/v0.2.3/README.md#contributing-vectors)
 

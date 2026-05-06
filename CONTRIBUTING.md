@@ -83,10 +83,10 @@ If a proposal has been deferred or rejected, you can re-open with material chang
 
 The reference SDKs live in separate repositories:
 
-- `handshake-protocol/python` (MIT)
-- `handshake-protocol/typescript` (MIT)
-- `handshake-protocol/go` (MIT)
-- `handshake-protocol/rust` (MIT)
+- `handshake-ai-protocol/python` (MIT)
+- `handshake-ai-protocol/typescript` (MIT)
+- `handshake-ai-protocol/go` (MIT)
+- `handshake-ai-protocol/rust` (MIT)
 
 Each has its own CONTRIBUTING.md. In general, SDK changes that are wire-protocol-level land here in the spec repo first (via HEP), then propagate to the SDKs.
 

@@ -9,7 +9,7 @@ We take coordinated disclosure seriously and treat security reports with priorit
 Please report:
 
 - **Cryptographic weaknesses** in the protocol design (signature schemes used incorrectly, hash collisions, replay vulnerabilities, audience confusion, etc.)
-- **Implementation vulnerabilities** in any of the reference SDKs (`handshake-protocol/{python,typescript,go,rust}`)
+- **Implementation vulnerabilities** in any of the reference SDKs (`handshake-ai-protocol/{python,typescript,go,rust}`)
 - **Test vector errors** that allow non-conformant behavior to pass
 - **Schema constraints** that fail to reject malformed messages a real implementation should reject
 - **Composition risks** with MCP, A2A, OAuth 2.1, or AP2 that the spec does not adequately mitigate
@@ -59,7 +59,7 @@ For critical vulnerabilities being actively exploited, we may shorten the timeli
 
 ## What you get
 
-- **Acknowledgment** in the [advisories list](https://github.com/handshake-protocol/spec/security/advisories) (unless you prefer anonymity)
+- **Acknowledgment** in the [advisories list](https://github.com/handshake-ai-protocol/spec/security/advisories) (unless you prefer anonymity)
 - **A bounty** for in-scope, novel vulnerabilities. Bounty program details published at [handshake.ai/security/bounty](https://handshake.ai/security/bounty). Crit/high-severity payouts in the $5,000–$50,000 USD range.
 - **Direct communication** with the team during the coordinated disclosure period
 - **Co-authorship credit** on the post-quarantine technical write-up if desired
