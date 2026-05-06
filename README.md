@@ -153,5 +153,3 @@ The Handshake Protocol is maintained by Handshake AI in partnership with the Han
 - Working Group inquiries: [working-group@handshake.ai](mailto:working-group@handshake.ai)
 - Implementation Guide (NDA): [partners@handshake.ai](mailto:partners@handshake.ai)
 - Security: [security@handshake.ai](mailto:security@handshake.ai)
-
-Built by [The Camelback](https://handshake.ai).
